@@ -1,9 +1,11 @@
 package com.cefeon.toplistbot;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandFactory {
     private final Map<String, Command> commandMap = new HashMap<>();
+
     public CommandFactory() {
         commandMap.put("!toplist", new ToplistCommand());
         commandMap.put("!blacklist", new BlacklistCommand());

@@ -10,34 +10,35 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ToplistCommand implements Command{
+public class ToplistCommand implements Command {
     @Override
     public void execute(MessageChannel channel, Message message, ArrayList<String> blackList) {
-            blackList.add("");
-            List<Message> history = channelHistoryToList(channel, message);
-            ArrayList<String> contents = removeBlacklisted(history, blackList);
-            Map<String,Integer> sorted = sortByOccurrences(countFrequencies(contents));
-            printTopList(sorted, channel);
+        blackList.add("");
+        List<Message> history = channelHistoryToList(channel, message);
+        ArrayList<String> contents = removeBlacklisted(history, blackList);
+        Map<String, Integer> sorted = sortByOccurrences(countFrequencies(contents));
+        printTopList(sorted, channel);
     }
 
-    private ArrayList<String> removeBlacklisted(List<Message> messageList, ArrayList<String> blackList){
+    private ArrayList<String> removeBlacklisted(List<Message> messageList, ArrayList<String> blackList) {
         ArrayList<String> contents = new ArrayList<>();
         messageList.stream()
-                .filter(x->!(x.getAuthor().isBot()))
-                .filter(x->!(blackList.contains(x.getContentRaw())))
-                .forEach(x->contents.add(x.getContentRaw()));
+                .filter(x -> !(x.getAuthor().isBot()))
+                .filter(x -> !(blackList.contains(x.getContentRaw())))
+                .forEach(x -> contents.add(x.getContentRaw()));
         return contents;
     }
 
-    private void printTopList(Map<String,Integer> list, MessageChannel channel){
+    private void printTopList(Map<String, Integer> list, MessageChannel channel) {
         StringBuilder builder = new StringBuilder();
-        list.forEach((x,y)-> builder.append(x).append(" | ").append("**").append(y).append("**").append("\n"));
+        list.forEach((x, y) -> builder.append(x).append(" | ").append("**").append(y).append("**").append("\n"));
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Most popular messages on #"+channel.getName(), null);
+        eb.setTitle("Most popular messages on #" + channel.getName(), null);
         eb.setColor(new Color(140, 0, 100));
         eb.setDescription(builder);
         channel.sendMessage(eb.build()).queue();
     }
+
     private List<Message> channelHistoryToList(MessageChannel channel, Message currentMessage) {
         List<Message> history = new ArrayList<>(MessageHistory
                 .getHistoryBefore(channel, currentMessage.getId())
@@ -58,7 +59,8 @@ public class ToplistCommand implements Command{
         }
         return history;
     }
-    private Map<String, Integer> sortByOccurrences(Map<String, Integer> map){
+
+    private Map<String, Integer> sortByOccurrences(Map<String, Integer> map) {
         return map.entrySet().stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .limit(5)
@@ -67,7 +69,7 @@ public class ToplistCommand implements Command{
 
     private Map<String, Integer> countFrequencies(List<String> list) {
         Map<String, Integer> frequencies = new HashMap<>();
-        list.forEach(s->frequencies.put(s,Collections.frequency(list, s)));
+        list.forEach(s -> frequencies.put(s, Collections.frequency(list, s)));
         return frequencies;
     }
 }

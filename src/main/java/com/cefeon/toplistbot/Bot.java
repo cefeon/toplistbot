@@ -18,9 +18,7 @@ import java.util.*;
 
 public class Bot extends ListenerAdapter {
     private final Logger logger = LogManager.getLogger("logger");
-
     private final String botToken;
-
     ArrayList<String> blackList = new ArrayList<>();
 
     public Bot(String botToken) {
@@ -55,8 +53,8 @@ public class Bot extends ListenerAdapter {
 
         CommandFactory commandFactory = new CommandFactory();
         Map<String, Command> commandList = commandFactory.getCommandMap();
-
-        if (commandList.containsKey(message.getContentRaw().split(" ")[0])){
+        String firstWord = message.getContentRaw().split(" ")[0];
+        if (commandList.containsKey(firstWord)) {
             Command targetCommand = commandFactory.getCommand(message.getContentRaw().split(" ")[0]);
             targetCommand.execute(channel, message, blackList);
         }
