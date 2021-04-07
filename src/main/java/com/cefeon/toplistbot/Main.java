@@ -10,5 +10,6 @@ public class Main extends ListenerAdapter {
         final String BOT_TOKEN = System.getenv("BOT_TOKEN");
         Bot bot = new Bot(BOT_TOKEN);
         bot.start();
+        
     }
 }
